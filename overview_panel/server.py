@@ -34,6 +34,43 @@ class ClientThread(Thread):
         self._n_images = n_img
         self._stream_host = stream_host
 
+    def receive_stream(self):
+        """
+        Function that receives the stream and send the signal for the clients using socketio.
+        """
+        message = None
+        # You always need to specify the host parameter, otherwise bsread will try to access PSI servers.
+        with source(host=self._stream_host, port=self._stream_output_port, receive_timeout=1000) as input_stream:
+
+            n_received = 0
+            # Detects how many messages are expected
+            if self._n_images == -1:
+                while True:
+                    message = input_stream.receive()
+                    # In case of receive timeout (1000 ms in this example), the received data is None.
+                    if message is None:
+                        continue
+                    else:
+                        # Creates the image and saves to the file that is shown to the client
+                        pyplot.imshow(message.data.data['image'].value)
+                        pyplot.savefig('static/images/stream.png')
+                        # Increases the number of received messages
+                        n_received += 1
+                        # Generates the data containing meaningful information to the client
+                        data = {'number_of_received_messages':  n_received,
+                                'data': n_received,
+                                'messages_received': float(message.statistics.messages_received),
+                                'total_bytes_received': float(message.statistics.total_bytes_received),
+                                'repetition_rate': float(message.data.data['repetition_rate'].value),
+                                'beam_energy': float(message.data.data['beam_energy'].value),
+                                'image_size_y': float(message.data.data['image_size_y'].value),
+                                'image_size_x': float(message.data.data['image_size_x'].value)
+                                }
+                        # pyplot.show()
+                        # emits the signal with the data
+                        socketio.emit('newmessage', data, namespace='/test')
+
+
 
 if __name__== "__main__":
     socketio.run(app)
