@@ -103,5 +103,11 @@ class ClientThread(Thread):
 def page_not_found(e):
     return render_template('404.html'), 404
 
+@socketio.on('connect', namespace='/test')
+def test_connect():
+    # need visibility of the global thread object
+    global thread
+    print('Client connected...')
+
 if __name__== "__main__":
     socketio.run(app)
