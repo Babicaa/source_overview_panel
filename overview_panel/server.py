@@ -10,6 +10,7 @@ import optparse
 from bsread import source
 from matplotlib import pyplot, image
 
+
 __author__ = 'christy'
 
 app = Flask(__name__)
@@ -19,6 +20,20 @@ CORS(app)
 api = Api(app)
 app.config['SECRET_KEY'] = 'christy'
 app.config['DEBUG'] = True
-
-#turn the flask app into a socketio app
 socketio = SocketIO(app)
+
+thread = Thread()
+thread_stop_event = Event()
+
+
+class ClientThread(Thread):
+    def __init__(self, port, n_img, stream_host, ):
+        super(ClientThread, self).__init__()
+        self._delay = 1.5
+        self._stream_output_port = port
+        self._n_images = n_img
+        self._stream_host = stream_host
+
+
+if __name__== "__main__":
+    socketio.run(app)
