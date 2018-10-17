@@ -117,5 +117,16 @@ def test_connect():
         thread.start()
 
 
+
+
 if __name__== "__main__":
-    socketio.run(app)
+
+    default_host="127.0.0.1"
+
+    default_port="5000"
+
+    default_host_source="localhost"
+
+    default_port_source="8888"
+
+    socketio.run(app, debug= True)
