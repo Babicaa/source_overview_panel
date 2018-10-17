@@ -129,7 +129,23 @@ class Index(Resource):
         else:
             return make_response(render_template('index.html'), 200, headers)
 
+# RESTFUL API for login
+class Login(Resource):
+    def __init__(self):
+        pass
+    def post(self):
+        headers = {'Content-Type': 'text/html'}
+        # Detects if the username/password are correct and starts the session
+        if request.form['password'] == 'password' and request.form['username'] == 'admin':
+            session['logged_in'] = True
+            return make_response(render_template('index.html'), 200, headers)
+        else:
+            flash("Try again...")
+            return make_response(render_template('login.html'), 200, headers)
+
+
 api.add_resource(Index, '/')
+api.add_resource(Login,'/login')
 
 
 if __name__== "__main__":
