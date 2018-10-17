@@ -109,5 +109,13 @@ def test_connect():
     global thread
     print('Client connected...')
 
+
+    #Start the random number generator thread only if the thread has not been started before.
+    if not thread.isAlive():
+        print("Starting Thread")
+        thread = ClientThread(int(default_port_source), -1, default_host_source)
+        thread.start()
+
+
 if __name__== "__main__":
     socketio.run(app)
