@@ -117,6 +117,19 @@ def test_connect():
         thread.start()
 
 
+# RESTFUL API for index
+class Index(Resource):
+    def __init__(self):
+        pass
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        # allows the visualization of index if session logged in
+        if not session.get('logged_in'):
+            return make_response(render_template('login.html'), 200, headers)
+        else:
+            return make_response(render_template('index.html'), 200, headers)
+
+api.add_resource(Index, '/')
 
 
 if __name__== "__main__":
