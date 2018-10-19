@@ -47,12 +47,14 @@
   </header>
 
   <main>
-         <div class="container" id="content" ng-view>
+         <div class="container" ng-view>
             <div class="row">
                <div class="col s12 m6">
                   <div class="card grey lighten-1">
                      <div class="card-content darken-3-text">
                         <span class="card-title">Stream viewer</span>
+                         <img id="imgFromServer" style="width: 100%" src="static/images/stream.png" >
+                       <div id="content" ng-view></div>
                      </div>
                   </div>
                </div>
