@@ -9,161 +9,41 @@ from threading import Thread, Event
 import optparse
 from bsread import source
 from matplotlib import pyplot, image
+from flask import Flask, render_template, flash, request
+from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
-
-__author__ = 'christy'
-
+# App config.
+DEBUG = True
 app = Flask(__name__)
-Material(app)
-CORS(app)
-
-api = Api(app)
-app.config['SECRET_KEY'] = 'christy'
-app.config['DEBUG'] = True
-
-socketio = SocketIO(app)
-
-thread = Thread()
-thread_stop_event = Event()
+app.config.from_object(__name__)
+app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 
-class ClientThread(Thread):
-    def __init__(self, port, n_img, stream_host, ):
-        super(ClientThread, self).__init__()
-        self._delay = 1.5
-        self._stream_output_port = port
-        self._n_images = n_img
-        self._stream_host = stream_host
-
-    def receive_stream(self):
-        """
-        Function that receives the stream and send the signal for the clients using socketio.
-        """
-        message = None
-        # You always need to specify the host parameter, otherwise bsread will try to access PSI servers.
-        with source(host=self._stream_host, port=self._stream_output_port, receive_timeout=1000) as input_stream:
-
-            n_received = 0
-            # Detects how many messages are expected
-            if self._n_images == -1:
-                while True:
-                    message = input_stream.receive()
-                    # In case of receive timeout (1000 ms in this example), the received data is None.
-                    if message is None:
-                        continue
-                    else:
-                        # Creates the image and saves to the file that is shown to the client
-                        pyplot.imshow(message.data.data['image'].value)
-                        pyplot.savefig('static/images/stream.png')
-                        # Increases the number of received messages
-                        n_received += 1
-                        # Generates the data containing meaningful information to the client
-                        data = {'number_of_received_messages': n_received,
-                                'data': n_received,
-                                'messages_received': float(message.statistics.messages_received),
-                                'total_bytes_received': float(message.statistics.total_bytes_received),
-                                'repetition_rate': float(message.data.data['repetition_rate'].value),
-                                'beam_energy': float(message.data.data['beam_energy'].value),
-                                'image_size_y': float(message.data.data['image_size_y'].value),
-                                'image_size_x': float(message.data.data['image_size_x'].value)
-                                }
-
-                        # emits the signal with the data
-                        socketio.emit('newmessage', data, namespace='/test')
-
-            else:
-                for _ in range(self._n_images):
-                    message = input_stream.receive()
-                    # In case of receive timeout (1000 ms in this example), the received data is None.
-                    if message is None:
-                        continue
-                    else:
-                        # Creates the image and saves to the file that is shown to the client
-                        pyplot.imshow(message.data.data['image'].value)
-                        pyplot.savefig('./stream_online_viewer/static/images/stream.png')
-                        # Increases the number of received messages
-                        n_received += 1
-                        # Generates the data containing meaningful information to the client
-                        data = {'number_of_received_messages': n_received,
-                                'data': n_received,
-                                'messages_received': float(message.statistics.messages_received),
-                                'total_bytes_received': float(message.statistics.total_bytes_received),
-                                'repetition_rate': float(message.data.data['repetition_rate'].value),
-                                'beam_energy': float(message.data.data['beam_energy'].value),
-                                'image_size_y': float(message.data.data['image_size_y'].value),
-                                'image_size_x': float(message.data.data['image_size_x'].value)
-                                }
-                        # emits the signal with the data
-
-                        socketio.emit('newmessage', data, namespace='/test')
-
-    def run(self):
-        self.receive_stream()
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
-
-@socketio.on('connect', namespace='/test')
-def test_connect():
-    # need visibility of the global thread object
-    global thread
-    print('Client connected...')
+class ReusableForm(Form):
+    name = TextField('Name:', validators=[validators.required()])
+    email = TextField('Email:', validators=[validators.required(), validators.Length(min=6, max=35)])
+    password = TextField('Password:', validators=[validators.required(), validators.Length(min=3, max=35)])
 
 
-    #Start the random number generator thread only if the thread has not been started before.
-    if not thread.isAlive():
-        print("Starting Thread")
-        thread = ClientThread(int(default_port_source), -1, default_host_source)
-        thread.start()
+@app.route("/", methods=['GET', 'POST'])
+def hello():
+    form = ReusableForm(request.form)
 
+    print(form.errors)
+    if request.method == 'POST':
+        name = request.form['name']
+        password = request.form['password']
+        email = request.form['email']
+        print(name, " ", email, " ", password)
 
-# RESTFUL API for index
-class Index(Resource):
-    def __init__(self):
-        pass
-    def get(self):
-        headers = {'Content-Type': 'text/html'}
-        # allows the visualization of index if session logged in
-        if not session.get('logged_in'):
-            return make_response(render_template('login.html'), 200, headers)
+        if form.validate():
+            # Save the comment here.
+            flash('Thanks for registration ' + name)
         else:
-            return make_response(render_template('index.html'), 200, headers)
+            flash('Error: All the form fields are required. ')
 
-# RESTFUL API for login
-class Login(Resource):
-    def __init__(self):
-        pass
-    def post(self):
-        headers = {'Content-Type': 'text/html'}
-        # Detects if the username/password are correct and starts the session
-        if request.form['password'] == 'password' and request.form['username'] == 'admin':
-            session['logged_in'] = True
-            return make_response(render_template('index.html'), 200, headers)
-        else:
-            flash("Try again...")
-            return make_response(render_template('login.html'), 200, headers)
-#
-# class Logout(Resource):
-#     def __init__(self):
-#         pass
-#     def get(self):
-#         session['logged_in'] = False
-#         return redirect(url_for('index'))
+    return render_template('addchannel.html', form=form)
 
 
-api.add_resource(Index, '/')
-api.add_resource(Login,'/login')
-# api.add_resource(Logout,'/logout')
-
-if __name__== "__main__":
-
-    default_host="127.0.0.1"
-
-    default_port="5000"
-
-    default_host_source="localhost"
-
-    default_port_source="8888"
-
-    socketio.run(app, debug= True)
+if __name__ == "__main__":
+    app.run()
