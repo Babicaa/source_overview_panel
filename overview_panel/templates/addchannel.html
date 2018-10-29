@@ -15,8 +15,36 @@
       <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
    </head>
     <body>
+          <header>
+         <nav>
+            <ul id="slide-out" class="sidenav">
+               <li>
+                  <div class="user-view">
+                     <div class="background" style="margin-left: -150px;margin-top: -231px;">
+                        <img src="/static/images/office.png">
+                     </div>
+                     <img class="circle" src="/static/images/pic.png">
+                     <span class="white-text name">Christiana</span>
+                     <span class="white-text email">christiana.uzonwanne@psi.ch</span>
+                  </div>
+               </li>
+               <li><a class="sidenav-close" href="/"><i class="material-icons">home</i>Dashboard</a></li>
+               <li><a onclick="M.toast({html: 'The goal of this task is to display a stream in a web client. Lets imagine that the stream source is a camera that is sending live images of the beam in SwissFEL. In the stream, together with the raw image, there are also some calculated data and metadata the user might want to see. The user is interested in live stream viewing and wants to use a web browser to do that.'})" class="sidenav-close"><i class="material-icons">info</i>About</a></li>
+               <li>
+                  <div class="divider"></div>
+               </li>
+               <li><a class="sidenav-close" href="/logout"><i class="material-icons">exit_to_app</i>Logout</a></li>
+            </ul>
+            <div class="nav-wrapper teal" >
+               <a class="brand-logo center">Online Stream Viewer</a>
+               <ul class="center hide-on-med-and-down">
+                  <li><a href="#" data-target="slide-out" class="sidenav-trigger show-on-large show-on-medium-and-down"><i class="material-icons">menu</i></a></li>
+               </ul>
+            </div>
+         </nav>
+      </header>
 
-
+<main>
 <div class="container">
 
   <div class="row">
@@ -25,22 +53,9 @@
         {{ form.csrf }}
           <div class="row">
               <div class="input-field col s3">
-                   <p>Name:<input type="text" id="name" name="name" placeholder="What's your name?"></p>
+                   <p>Name:<input type="text" id="name" name="name" placeholder="Enter channel name"></p>
               </div>
           </div>
-            <div class="row">
-               <div class="input-field col s3">
-                  <p>Email:<input type="email" id="email" name="email" placeholder="Your email will be used to contact you."></p>
-
-               </div>
-            </div>
-            <div class="row">
-               <div class="input-field col s3">
-                  <P>Password: <input type="password" id="password" name="password" placeholder="Enter password"></P>
-
-               </div>
-            </div>
-
 
 
         <button type="submit" class="btn btn-success">Sign Up</button>
@@ -73,5 +88,6 @@
 </div>
 <br>
 
+</main>
 </body>
 </html>
