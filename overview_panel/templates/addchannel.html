@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="StreamApp">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible">
+      <title>Paul Scherrer Institut - Online stream viewer</title>
+
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+      <link rel="stylesheet" type="text/css" href="/static/css/materialize.min.css"  media="screen,projection"/>
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+      <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+      <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+   </head>
+    <body>
+
+
+<div class="container">
+
+  <div class="row">
+      <h2>Flask Web Form</h2>
+      <form class="col s12" action=" " method="POST" id="form">
+        {{ form.csrf }}
+          <div class="row">
+              <div class="input-field col s3">
+                   <p>Name:<input type="text" id="name" name="name" placeholder="What's your name?"></p>
+              </div>
+          </div>
+            <div class="row">
+               <div class="input-field col s3">
+                  <p>Email:<input type="email" id="email" name="email" placeholder="Your email will be used to contact you."></p>
+
+               </div>
+            </div>
+            <div class="row">
+               <div class="input-field col s3">
+                  <P>Password: <input type="password" id="password" name="password" placeholder="Enter password"></P>
+
+               </div>
+            </div>
+
+
+
+        <button type="submit" class="btn btn-success">Sign Up</button>
+      </form>
+          </div>
+
+
+
+
+  <br>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+
+        {% for message in messages %}
+            {% if "Error" not in message[1]: %}
+                <div class="alert alert-info">
+                <strong>Success! </strong> {{ message[1] }}
+                </div>
+            {% endif %}
+
+            {% if "Error" in message[1]: %}
+                <div class="alert alert-warning">
+                {{ message[1] }}
+                </div>
+            {% endif %}
+        {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+</div>
+<br>
+
+</body>
+</html>
