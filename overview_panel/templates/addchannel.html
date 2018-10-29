@@ -48,18 +48,41 @@
 <div class="container">
 
   <div class="row">
-      <h2>Flask Web Form</h2>
-      <form class="col s12" action=" " method="POST" id="form">
+      <script>
+
+          var channels = [];
+          function addChannel(element){
+            console.log("hello");
+            elem = document.getElementById("channelInput");
+            channels.push(elem.value);
+            channels[elem.value]
+            elem.value = "";
+            document.getElementById("name").value = channels;
+          }
+      </script>
+      <div id="channelList"></div>
+      <h2>Add Your Channel</h2>
+
         {{ form.csrf }}
           <div class="row">
-              <div class="input-field col s3">
-                   <p>Name:<input type="text" id="name" name="name" placeholder="Enter channel name"></p>
+              <div class="input-field col s6">
+                   <p>Name:<input type="text" id="channelInput" name="name" placeholder="Enter channel name"></p>
               </div>
           </div>
 
+      <div class="input-field col s6">
+        <button onclick="addChannel(this)" class="btn btn-success">Add Channel</button>
+          <script>
 
-        <button type="submit" class="btn btn-success">Add Channel</button>
-      </form>
+          </script>
+      </div>
+
+      <div class="input-field col s6">
+     <form class="col s12" action=" " method="POST" id="form">
+          <button type="submit" class="btn btn-success" id="name" name="name">View Channels</button>
+     </form>
+
+      </div>
           </div>
 
 
