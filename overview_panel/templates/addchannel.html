@@ -15,124 +15,144 @@
       <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
    </head>
     <body>
-          <header>
-         <nav>
-            <ul id="slide-out" class="sidenav">
+       <header>
+      <nav>
+          <ul id="slide-out" class="sidenav sidenav-fixed" >
                <li>
                   <div class="user-view">
                      <div class="background" style="margin-left: -150px;margin-top: -231px;">
                         <img src="/static/images/office.png">
                      </div>
                      <img class="circle" src="/static/images/pic.png">
-                     <span class="white-text name">Christiana</span>
+                     <span class="white-text name">Christiana Uzonwanne</span>
                      <span class="white-text email">christiana.uzonwanne@psi.ch</span>
                   </div>
                </li>
-               <li><a class="sidenav-close" href="/"><i class="material-icons">home</i>Dashboard</a></li>
-               <li><a onclick="M.toast({html: 'The goal of this task is to display a stream in a web client. Lets imagine that the stream source is a camera that is sending live images of the beam in SwissFEL. In the stream, together with the raw image, there are also some calculated data and metadata the user might want to see. The user is interested in live stream viewing and wants to use a web browser to do that.'})" class="sidenav-close"><i class="material-icons">info</i>About</a></li>
-               <li>
-                  <div class="divider"></div>
-               </li>
-               <li><a class="sidenav-close" href="/logout"><i class="material-icons">exit_to_app</i>Logout</a></li>
+
+
+              <li class="collection-item">
+                  <a href="{{ url_for('form_data') }}"><i class="material-icons">add_circle</i>Add Channel</a>
+              </li>
+
+              <li class="collection-item">
+                  <a href="remove_channel.html"><i class="material-icons">delete</i>Remove Channel</a>
+              </li>
+
+
+
+              <li><div class="divider"></div></li>
+              <li><a class="sidenav-close" href="/"><i class="material-icons">home</i>Dashboard</a></li>
+              <li><a class="sidenav-close" href="/logout"><i class="material-icons">exit_to_app</i>Logout</a></li>
+              <li><a onclick="M.toast({html: 'The goal of this task is to display a stream in a web client. Lets imagine that the stream source is a camera that is sending live images of the beam in SwissFEL. In the stream, together with the raw image, there are also some calculated data and metadata the user might want to see. The user is interested in live stream viewing and wants to use a web browser to do that.'})" class="sidenav-close"><i class="material-icons">info</i>About</a></li>
+
             </ul>
+
             <div class="nav-wrapper teal" >
-               <a class="brand-logo center">Online Stream Viewer</a>
+               <a class="brand-logo center">Overview Panel</a>
                <ul class="center hide-on-med-and-down">
                   <li><a href="#" data-target="slide-out" class="sidenav-trigger show-on-large show-on-medium-and-down"><i class="material-icons">menu</i></a></li>
                </ul>
             </div>
-         </nav>
+      </nav>
       </header>
 
-<main>
-<div class="container">
+       <div class="container">
+        <main>
+        <div class="container">
 
-  <div class="row">
-      <script>
-
-          var channels = [];
-          function addChannel(element){
-            console.log("hello");
-            elem = document.getElementById("channelInput");
-            channels.push(elem.value);
-            channels[elem.value]
-            elem.value = "";
-            document.getElementById("name").value = channels;
-          }
-      </script>
-      <div id="channelList"></div>
-      <h2>Add Your Channel</h2>
-
-        {{ form.csrf }}
           <div class="row">
+              <div class="center-align" >
+              <script>
+
+                  var channels = [];
+                  function addChannel(element){
+                    console.log("hello");
+                    elem = document.getElementById("channelInput");
+                    channels.push(elem.value);
+                    channels[elem.value]
+                    elem.value = "";
+                    document.getElementById("view").value = channels;
+
+
+                  }
+              </script>
+              <div id="channelList"></div>
+              <h2>Add Your Channel</h2>
+
+                {{ form.csrf }}
+                  <div class="row">
+                      <div class=" input-field col-s6 push-s12">
+                           <input type="text" id="channelInput" name="name" placeholder="Enter channel name">
+                      </div>
+
+                  </div>
+
               <div class="input-field col s6">
-                   <p>Name:<input type="text" id="channelInput" name="name" placeholder="Enter channel name"></p>
+                <button onclick="addChannel(this)" class="btn btn-success">Add Channel</button>
+
               </div>
-          </div>
 
-      <div class="input-field col s6">
-        <button onclick="addChannel(this)" class="btn btn-success">Add Channel</button>
-          <script>
-
-          </script>
-      </div>
-
-      <div class="input-field col s6">
-     <form class="col s12" action=" " method="POST" id="form">
-          <button type="submit" class="btn btn-success" id="name" name="name">View Channels</button>
-     </form>
-
-      </div>
-          </div>
-
-
-
-
-  <br>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-
-        {% for message in messages %}
-            {% if "Error" not in message[1]: %}
-                <div class="alert alert-info">
-                <strong>Success! </strong> {{ message[1] }}
-                </div>
-            {% endif %}
-
-            {% if "Error" in message[1]: %}
-                <div class="alert alert-warning">
-                {{ message[1] }}
-                </div>
-            {% endif %}
-        {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-</div>
-<br>
-    <footer class="page-footer teal">
-            <div class="container">
-               <div class="row">
-                  <div class="col l6 s12">
-                     <h5 class="white-text">Online Stream Viewer</h5>
-                     <p class="grey-text text-lighten-4">You can use this app to visualize the online stream...</p>
+              <div class="input-field col s6">
+             <form class="col s12" action=" " method="POST" id="form">
+                  <button type="submit" class="btn btn-success" id="view" name="name">View Channels</button>
+             </form>
+              </div>
+              </div>
                   </div>
-                  <div class="col l4 offset-l2 s12">
-                     <h5 class="white-text">Links</h5>
-                     <ul>
-                        <li><a onclick="M.toast({html: 'Noch nicht...'})" class="grey-text text-lighten-3" href="#!" >Interflex?</a></li>
-                        <li><a onclick="M.toast({html: 'Nein, nein...'})" class="grey-text text-lighten-3" href="#!" >PSI Intranet?</a></li>
-                     </ul>
-                  </div>
+
+
+
+          <br>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+
+                {% for message in messages %}
+                    {% if "Error" not in message[1]: %}
+                        <div class="alert alert-info">
+                        <strong>Success! </strong> {{ message[1] }}
+                        </div>
+
+
+
+                    {% endif %}
+
+                    {% if "Error" in message[1]: %}
+                        <div class="alert alert-warning">
+                        {{ message[1] }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+
+        </div>
+        <br>
+
+        </main>
+       </div>
+           <footer class="page-footer teal">
+               <div class="container">
+                   <div class="row">
+                       <div class="col l6 s12">
+                           <h5 class="white-text">Online Stream Viewer</h5>
+                           <p class="grey-text text-lighten-4">You can use this app to visualize the online stream...</p>
+                       </div>
+                       <div class="col l4 offset-l2 s12">
+                           <h5 class="white-text">Links</h5>
+                           <ul>
+                               <li><a onclick="M.toast({html: 'Noch nicht...'})" class="grey-text text-lighten-3" href="#!" >Interflex?</a></li>
+                               <li><a onclick="M.toast({html: 'Nein, nein...'})" class="grey-text text-lighten-3" href="#!" >PSI Intranet?</a></li>
+                           </ul>
+                       </div>
+                   </div>
                </div>
-            </div>
-            <div class="footer-copyright">
-               <div class="container valign-wrapper">
-                  <i class="material-icons ">laptop_mac</i> <a target="_blank" class="grey-text text-lighten-4 right" href="https://www.linkedin.com/in/lhdamiani/">Leonardo Hax Damiani 2018</a>
+               <div class="footer-copyright">
+                   <div class="container valign-wrapper">
+                       <i class="material-icons ">laptop_mac</i> <a target="_blank" class="grey-text text-lighten-4 right" href="https://www.linkedin.com/in/lhdamiani/">Leonardo Hax Damiani 2018</a>
+                   </div>
                </div>
-            </div>
-         </footer>
-</main>
+           </footer>
       <script src="https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
       <!--JavaScript at end of body for optimized loading-->
       <script type="text/javascript" src="//code.jquery.com/jquery-3.3.1.min.js"></script>
