@@ -19,7 +19,7 @@
   <!-- HTML -->
   <header>
       <nav>
-          <ul id="slide-out" class="sidenav">
+          <ul id="slide-out" class="sidenav sidenav-fixed" >
                <li>
                   <div class="user-view">
                      <div class="background" style="margin-left: -150px;margin-top: -231px;">
@@ -30,13 +30,31 @@
                      <span class="white-text email">christiana.uzonwanne@psi.ch</span>
                   </div>
                </li>
-               <li><a class="sidenav-close" href="/"><i class="material-icons">home</i>Dashboard</a></li>
-               <li><a onclick="M.toast({html: 'The goal of this task is to display a stream in a web client. Lets imagine that the stream source is a camera that is sending live images of the beam in SwissFEL. In the stream, together with the raw image, there are also some calculated data and metadata the user might want to see. The user is interested in live stream viewing and wants to use a web browser to do that.'})" class="sidenav-close"><i class="material-icons">info</i>About</a></li>
+
+            <ul class = 'collapsible collapsible-accordion'>
+               <li class="bold">
+                   <a class = 'collapsible-header waves-effect waves-teal' tabindex="0"><i class="material-icons">settings</i>Channel Configurations</a>
+                   <div class="collapsible-body">
+                       <ul>
+                           <li>
+                               <a href="{{ url_for('form_data') }}"><i class="material-icons">add_circle</i>Add Channel</a>
+                           </li>
+                            <li>
+                               <a href="remove_channel.html"><i class="material-icons">delete</i>Remove Channel</a>
+                           </li>
+                       </ul>
+                   </div>
+               </li>
+           </ul>
                <li>
                   <div class="divider"></div>
                </li>
                <li><a class="sidenav-close" href="/logout"><i class="material-icons">exit_to_app</i>Logout</a></li>
+               <li><a class="sidenav-close" href="/"><i class="material-icons">home</i>Dashboard</a></li>
+               <li><a onclick="M.toast({html: 'The goal of this task is to display a stream in a web client. Lets imagine that the stream source is a camera that is sending live images of the beam in SwissFEL. In the stream, together with the raw image, there are also some calculated data and metadata the user might want to see. The user is interested in live stream viewing and wants to use a web browser to do that.'})" class="sidenav-close"><i class="material-icons">info</i>About</a></li>
+
             </ul>
+
             <div class="nav-wrapper teal" >
                <a class="brand-logo center">Overview Panel</a>
                <ul class="center hide-on-med-and-down">
@@ -47,34 +65,15 @@
   </header>
 
   <main>
-        <div class="row">
-            <form class="col s12" action="server.py" method="post">
-                <div class="row">
-                    <div class="input-field col s8">
-                        <i class="material-icons prefix">textsms</i>
-                        <input type="text" id="autocomplete-input" class="autocomplete" name="CHANNEL NAME">
-                        <label for="autocomplete-input"> CHANNEL NAME</label>
-                    </div>
-
-                    <div class=" input-field inline">
-                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-                         <i class="material-icons right">send</i>
-                         </button>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-
          <div class="container" >
             <div class="row">
-               <div class="col s12 m6">
-                  <div class="card grey lighten-1">
-                     <div class="card-content darken-3-text">
-                        <span class="card-title">Stream viewer</span>
-                         <img id="imgFromServer" style="width: 100%" src="static/images/stream.png" >
-                       <div id="content" ng-view></div>
-                     </div>
+                <div class="input-field col s6">
+                     <button type="button" onclick="window.location.href='{{ url_for( 'form_data' ) }}';" class="btn btn-success" id="view" name="name">View Channels</button>
+                </div>
+
+
+
+
                   </div>
                </div>
                <div class="col s12 m6">
