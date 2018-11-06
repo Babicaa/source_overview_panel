@@ -35,7 +35,7 @@
               </li>
 
               <li class="collection-item">
-                  <a href="remove_channel.html"><i class="material-icons">delete</i>Remove Channel</a>
+                  <a href="{{ url_for('remove_channel') }}"><i class="material-icons">delete</i>Remove Channel</a>
               </li>
 
 
@@ -62,29 +62,30 @@
 
           <div class="row">
               <div class="center-align" >
-              <script>
+                  <!--<script src="/static/js/saveState.js"></script>-->
+              <!--<script>-->
 
-                  var channels = [];
-                  function addChannel(element){
-                    console.log("hello");
-                    elem = document.getElementById("channelInput");
-                    channels.push(elem.value);
-                    channels[elem.value]
-                    elem.value = "";
-                    document.getElementById("view").value = channels;
+                  <!--var channels = [];-->
+                  <!--function addChannel(element){-->
+                    <!--console.log("hello");-->
+                    <!--elem = document.getElementById("channelInput");-->
+                    <!--channels.push(elem.value);-->
+                    <!--channels[elem.value]-->
+                    <!--elem.value = "";-->
+                    <!--document.getElementById("view").value = channels;-->
 
 
-                  }
-              </script>
+                  <!--}-->
+
+              <!--</script>-->
               <div id="channelList"></div>
-              <h2>Add Your Channel</h2>
-
-                {{ form.csrf }}
+              <h4>Add Your Channel</h4>
+                <form class="col s12" action=" " method="POST" id="form">
+                  {{ form.csrf }}
                   <div class="row">
                       <div class=" input-field col-s6 push-s12">
                            <input type="text" id="channelInput" name="name" placeholder="Enter channel name">
                       </div>
-
                   </div>
 
               <div class="input-field col s6">
@@ -93,16 +94,21 @@
               </div>
 
               <div class="input-field col s6">
-             <form class="col s12" action=" " method="POST" id="form">
+
                   <button type="submit" class="btn btn-success" id="view" name="name">View Channels</button>
+              </div>
              </form>
               </div>
               </div>
                   </div>
+                <p id=" valueDisplay"></p>
 
 
 
           <br>
+
+
+
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
 
@@ -126,9 +132,17 @@
                 {% endwith %}
 
 
-        </div>
-        <br>
 
+ <br>
+        <h4>Channels Present</h4>
+            <ul id="list" class="collection">
+
+                 {% for key, value in store.items() %}
+
+                <li class="collection-item">{{store.key}}</li>
+
+                 {% endfor %}
+            </ul>
         </main>
        </div>
            <footer class="page-footer teal">
@@ -172,6 +186,7 @@
       <script src="/static/js/application.js"></script>
       <script src="/static/js/controllers.js"></script>
       <script src="/static/js/services.js"></script>
+       <script src="/static/js/saveState.js"></script>
       <script type="text/javascript" src="/static/lib/flot/jquery.flot.js"></script>
       <script type="text/javascript" src="/static/lib/flot/jquery.flot.hashtable.js"></script>
       <script type="text/javascript" src="/static/lib/flot/jquery.flot.symbol.js"></script>
