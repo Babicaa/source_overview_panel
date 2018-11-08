@@ -50,7 +50,6 @@
             <div class="nav-wrapper teal" >
                <a class="brand-logo center">Add Channel</a>
                <ul class="center hide-on-med-and-down">
-
                   <li><a href="#" data-target="slide-out" class="sidenav-trigger show-on-large show-on-medium-and-down"><i class="material-icons">menu</i></a></li>
                </ul>
             </div>
@@ -115,7 +114,7 @@
                 <li class=" collection-header"><h5>Available channels</h5></li>
                  {% for row in data %}
 
-                <li class="collection-item">{{ row }}</li>
+                <li class="collection-item"><div>{{ row }}<a href="#!" class="secondary-content"><i class="material-icons">delete</i></a></div></li>
 
                  {% endfor %}
             </ul>
