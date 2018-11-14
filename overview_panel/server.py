@@ -1,5 +1,6 @@
 
 # Start with a basic flask app webpage.
+import csv
 from string import Template
 
 from flask_socketio import SocketIO, emit
@@ -24,13 +25,35 @@ app.config['SECRET_KEY'] = 'christy'
 
 socketio = SocketIO(app)
 
-global store
-store = {}
+
+class UserData:
+
+    def __init__(self):
+        self.storage = {}
+        self.newStore = {}
+
+    def save_data(self, channel_name):
+
+        self.storage[channel_name]= None
+        for key, value in self.storage.items():
+            if key not in self.newStore.keys():
+                self.newStore[key] = value
+                print(self.newStore)
+                break
+
+        else:
+            print('channel name already exists')
+
+    def get_data(self, channel_name):
+        return render_template('addchannel.html', data=channel_name)
+
+
+p = UserData()
+
 
 @app.route('/')
 def index():
     return render_template("index.html")
-
 
 
 
@@ -40,29 +63,22 @@ class ReusableForm(Form):
 @app.route("/addchannel", methods=['GET', 'POST'])
 def form_data():
 
-    global store
     form = ReusableForm(request.form)
     print(form.errors)
 
     if request.method == 'POST':
-        name = request.form['name']
-        store = {'key': name}
-        print(store)
 
+        user_input = request.form['name']
 
         if form.validate():
+            p.save_data(user_input)
 
             flash('Channel successfully added! ')
+
         else:
             flash('Error: All the form fields are required. ')
 
-    return render_template('addchannel.html', form=form, store=store)
-
-
-
-
-
-
+    return render_template('addchannel.html', form=form)
 
 if __name__ == "__main__":
     socketio.run(app)
