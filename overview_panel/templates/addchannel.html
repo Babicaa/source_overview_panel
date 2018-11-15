@@ -34,10 +34,6 @@
                   <a href="{{ url_for('form_data') }}"><i class="material-icons">add_circle</i>Add Channel</a>
               </li>
 
-              <li class="collection-item">
-                  <a href="{{ url_for('remove_channel') }}"><i class="material-icons">delete</i>Remove Channel</a>
-              </li>
-
 
 
               <li><div class="divider"></div></li>
@@ -78,46 +74,52 @@
 
                   </div>
 
+            <br>
 
-
-          <br>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-
-                {% for message in messages %}
-                    {% if "Error" not in message[1]: %}
-                        <div class="alert alert-info">
-                        <strong>Success! </strong> {{ message[1] }}
-                        </div>
-
-
-
-                    {% endif %}
-
-                    {% if "Error" in message[1]: %}
-                        <div class="alert alert-warning">
-                        {{ message[1] }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-                    {% endif %}
+                {% with messages = get_flashed_messages(category_filter=["category1"]) %}
+                  {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                      <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                  {% endif %}
                 {% endwith %}
 
 
 
-        <br>
+
+                {% with messages = get_flashed_messages(category_filter=["category2"]) %}
+                  {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                      <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
 
 
 
+                {% with messages = get_flashed_messages(category_filter=["category3"]) %}
+                    {% if "Error" in messages %}
+                        <div class="alert alert-warning">
+                        {{ message }}
+                        </div>
+                    {% endif %}
+                {% endwith %}
 
-            <ul id="list" class="collection with-header ">
-                <li class=" collection-header"><h5>Available channels</h5></li>
-                 {% for row in data %}
 
-                <li class="collection-item"><div>{{ row }}<a href="#!" class="secondary-content"><i class="material-icons">delete</i></a></div></li>
+            <br>
 
-                 {% endfor %}
-            </ul>
+             <ul id="list" class="collection with-header ">
+                  <li class=" collection-header"><h5>Available channels</h5></li>
+                    {% for key in data %}
+                  <li class="collection-item"><div>{{key}}<a href="#!" class="secondary-content"><i class="material-icons" >delete</i></a></div></li>
+                    {% endfor %}
+              </ul>
+
+
               <div class="center-align" >
                 <button class="btn btn-success" id = "list1" onclick = "openList1()" style="dispaly: none">View/Hide List</button>
               </div>
@@ -132,7 +134,9 @@
                     list.style.display = "none";
                 }
             }
+
             </script>
+
         </div>
         </div>
         </main>
@@ -178,6 +182,7 @@
       <script src="/static/js/application.js"></script>
       <script src="/static/js/controllers.js"></script>
       <script src="/static/js/services.js"></script>
+
 
       <script type="text/javascript" src="/static/lib/flot/jquery.flot.js"></script>
       <script type="text/javascript" src="/static/lib/flot/jquery.flot.hashtable.js"></script>
