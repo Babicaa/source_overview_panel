@@ -1,20 +1,6 @@
-
-# Start with a basic flask app webpage.
-import csv
-from string import Template
-import json
-import flask
-from flask_socketio import SocketIO, emit
-from flask_restful import Resource, Api
-from flask_material import Material
-from flask_cors import CORS
-from flask import Flask, flash
-from threading import Thread, Event
-import optparse
-from bsread import source
-from matplotlib import pyplot, image
+from flask_restful import Api
 from flask import Flask, render_template, flash, request, jsonify, url_for, copy_current_request_context, make_response, session, redirect, abort, _request_ctx_stack
-from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
+from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField, SelectField
 
 
 # App config.
@@ -25,14 +11,20 @@ app.config.from_object(__name__)
 app.config['SECRET_KEY'] = 'christy'
 api = Api(app)
 
-socketio = SocketIO(app)
-
 @app.route('/')
 def index():
+    """
+    :return: renders index.html on page load.
+     """
     return render_template("index.html")
 
-class UserData():
 
+class UserData:
+    """
+    Performs manipulations (save, display, delete) form inputs.
+    :param self.storage : Stores all form input.
+    :param self.newStore : Prevents duplicate data from getting stored.
+    """
     def __init__(self):
         self.storage = {}
         self.newStore = {}
@@ -47,45 +39,66 @@ class UserData():
                 break
 
         else:
-            print('channel name already exists')
+            flash('Channel already exists! ', 'category2')
 
     def get(self):
         return list(self.newStore.keys())
 
-    def delete(self):
-        return
-
+    def delete(self, channels):
+        del self.newStore[channels]
+        return list(self.newStore.keys())
 
 
 p = UserData()
 
 
 class ReusableForm(Form):
-    name = TextField('Name:', validators=[validators.required()])
+    """
+    Declares html input field with name 'channelInput' as a text field.
+    """
+    channelInput = TextField('Name:', validators=[validators.required()])
 
 
 @app.route("/addchannel", methods=['GET', 'POST'])
 def form_data():
+    """
+    Uses the POST method to get the data from the form,
+    performs a validation and calls the save_data instance.
+    :return: renders the form in addchannel.html with the saved data.
+    """
 
     form = ReusableForm(request.form)
-    print(form.errors)
-
     if request.method == 'POST':
-
-        user_input = request.form['name']
+        user_input = request.form['channelInput']
 
         if form.validate():
-
             p.save_data(user_input)
 
-            flash('Channel successfully added! ')
+            flash('Channel successfully added!', 'category1')
 
-        else:
-            flash('Error: All the form fields are required. ')
 
-    return render_template('addchannel.html', form=form , data = p.get())
+    return render_template('addchannel.html', form=form, data=p.get())
 
+
+@app.route("/removechannel", methods = ['GET','POST'])
+def delete_data():
+    """
+     Uses the POST method to get the data from the form,
+     performs a validation and calls the delete instance.
+     :return:
+    """
+
+    form = ReusableForm(request.form)
+    if request.method == 'POST':
+
+        user_input = request.form['channelInput']
+        if form.validate():
+            p.delete(user_input)
+            p.save_data(user_input)
+
+
+    return {}
 
 
 if __name__ == "__main__":
-    socketio.run(app)
+    app.run(port= 5000 , debug= True)
